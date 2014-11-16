@@ -7,6 +7,9 @@ namespace WindowsFormsApplication1.Classes
 {
     class drawBoxHandler
     {
+        /// <summary>
+        /// Enum for the different adjustmenst of the shape
+        /// </summary>
         private enum moved_box
         {
             TOP,
@@ -40,6 +43,9 @@ namespace WindowsFormsApplication1.Classes
             Redraw();
         }
 
+        /// <summary>
+        /// Redraw all shapes on the screen
+        /// </summary>
         public void Redraw()
         {
             using (Graphics g = Graphics.FromImage(_draw_on.Image))
@@ -51,12 +57,23 @@ namespace WindowsFormsApplication1.Classes
             _draw_on.Invalidate();
         }
 
+        /// <summary>
+        /// Remove all shapes and redraw the screen
+        /// </summary>
         public void Clear()
         {
             _shapes = new List<Shape>();
             Redraw();
         }
 
+        /// <summary>
+        /// Called when a shape is moved
+        /// </summary>
+        /// <param name="first_x">x pos of first click</param>
+        /// <param name="first_y">y pos of first click</param>
+        /// <param name="second_x">x pos of second click</param>
+        /// <param name="second_y">y pos of second click</param>
+        /// <param name="selected_shape">the affected shape</param>
         public void viewClicked(int first_x, int first_y, int second_x, int second_y, Shape selected_shape)
         {
 
@@ -76,6 +93,14 @@ namespace WindowsFormsApplication1.Classes
             Redraw();
         }
 
+        /// <summary>
+        /// Calculate the movement and apply is to the shape
+        /// </summary>
+        /// <param name="first_x">x pos of first click</param>
+        /// <param name="first_y">y pos of first click</param>
+        /// <param name="second_x">x pos of second click</param>
+        /// <param name="second_y">y pos of second click</param>
+        /// <param name="selected_shape">the affected shape</param>
         public void applyMove(int first_x, int first_y, int second_x, int second_y, ref Shape selected_shape)
         {
             // Calculate draw positions first
@@ -126,6 +151,12 @@ namespace WindowsFormsApplication1.Classes
             }
         }   
 
+        /// <summary>
+        /// Find out which square got clicked for a movement
+        /// </summary>
+        /// <param name="box">A box for dragging/resizing</param>
+        /// <param name="selected">A shape which is selected</param>
+        /// <returns></returns>
         private moved_box getMovedBox(Shape box, Shape selected)
         {
             if (box.getTop() < selected.getTop() && box.getBottom() > selected.getTop())
@@ -144,6 +175,14 @@ namespace WindowsFormsApplication1.Classes
             return moved_box.MOVE;
         }
 
+        /// <summary>
+        /// Create a new shape on the screen with a size
+        /// </summary>
+        /// <param name="first_x">x pos of first click</param>
+        /// <param name="first_y">y pos of first click</param>
+        /// <param name="second_x">x pos of second click</param>
+        /// <param name="second_y">y pos of second click</param>
+        /// <param name="tool">What tool is used</param>
         public void viewClicked(int first_x, int first_y, int second_x, int second_y, selected_tool tool)
         {
             // Calculate draw positions first
@@ -180,6 +219,11 @@ namespace WindowsFormsApplication1.Classes
             countToolTip();
         }
 
+        /// <summary>
+        /// When the select tool is used find out on which shape
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
         private void selectTool(int x, int y)
         {
             for(int i = 0; i < _shapes.Count; i++)
@@ -189,6 +233,9 @@ namespace WindowsFormsApplication1.Classes
             }
         }
 
+        /// <summary>
+        /// Tooltip showing all the present objects
+        /// </summary>
         private void countToolTip()
         {
             if (_count_label == null)
