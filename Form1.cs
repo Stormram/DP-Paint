@@ -10,6 +10,7 @@ using System.Windows.Forms;
 
 using MetroFramework.Forms;
 using WindowsFormsApplication1.Classes;
+using System.IO;
 
 namespace WindowsFormsApplication1
 {
@@ -109,6 +110,47 @@ namespace WindowsFormsApplication1
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
             // save clicked!
+            string data = _draw_handler.SaveAsString();
+
+            // Create save window
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Paint file|*.pnt";
+            sfd.FileName = "painting";
+            sfd.Title = "Save painting";
+
+            // If ok write to file :D
+            if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                using (StreamWriter bw = new StreamWriter(File.Create(sfd.FileName)))
+                {
+                    bw.Write(data);
+                    bw.Close();
+                }
+            }
+        }
+
+        private void loadToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // load clicked
+            // Create load window
+            OpenFileDialog sfd = new OpenFileDialog();
+            sfd.Filter = "Paint file|*.pnt";
+            sfd.FileName = "painting";
+            sfd.Title = "Load painting";
+
+            string data = "";
+
+            // Read the file
+            if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                using (StreamReader bw = new StreamReader(File.Open(sfd.FileName, FileMode.Open)))
+                {
+                    data = bw.ReadToEnd();
+                }
+            }
+            
+            // import it!
+            _draw_handler.LoadString(data);
         }
     }
 }

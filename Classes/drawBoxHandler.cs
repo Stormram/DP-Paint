@@ -259,10 +259,15 @@ namespace WindowsFormsApplication1.Classes
 
         public void LoadString(string to_load)
         {
+            _shapes = new List<Shape>();
             string[] lines = to_load.Split(Environment.NewLine.ToCharArray());
 
             foreach (string l in lines)
+            {
+                if (l == "") continue;
+
                 _shapes.Add(Shape.load(l));
+            }
 
             Redraw();
         }

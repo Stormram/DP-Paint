@@ -109,7 +109,7 @@ namespace WindowsFormsApplication1.Classes
         public override string Save()
         {
             return String.Format(
-                "rectangle {} {} {} {}", this.getLeft(), this.getTop(), this.getWidth(), this.getHeight()
+                "rectangle {0} {1} {2} {3}", this.getLeft(), this.getTop(), this.getWidth(), this.getHeight()
             );
         }
     }
@@ -131,7 +131,7 @@ namespace WindowsFormsApplication1.Classes
         public override string Save()
         {
             return String.Format(
-                "ellipse {} {} {} {}", this.getLeft(), this.getTop(), this.getWidth(), this.getHeight()
+                "ellipse {0} {1} {2} {3}", this.getLeft(), this.getTop(), this.getWidth(), this.getHeight()
             );
         }
     }
