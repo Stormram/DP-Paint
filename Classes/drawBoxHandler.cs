@@ -243,5 +243,28 @@ namespace WindowsFormsApplication1.Classes
 
             _form.UIThread(() => _count_label.Text = "Objects: " + _shapes.Count);
         }
+
+        /// <summary>
+        /// Create a string to write to file using defined language
+        /// </summary>
+        /// <returns></returns>
+        public string SaveAsString()
+        {
+            string result = "";
+            foreach (Shape _shape in _shapes)
+                result += _shape.Save() + Environment.NewLine;
+
+            return result;
+        }
+
+        public void LoadString(string to_load)
+        {
+            string[] lines = to_load.Split(Environment.NewLine.ToCharArray());
+
+            foreach (string l in lines)
+                _shapes.Add(Shape.load(l));
+
+            Redraw();
+        }
     }
 }

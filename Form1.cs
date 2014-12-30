@@ -105,5 +105,10 @@ namespace WindowsFormsApplication1
             applyToolStripMenuItem.Enabled = true;
             toolsToolStripMenuItem.Enabled = true;
         }
+
+        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // save clicked!
+        }
     }
 }
