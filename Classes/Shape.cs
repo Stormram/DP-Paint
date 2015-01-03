@@ -73,6 +73,19 @@ namespace WindowsFormsApplication1.Classes
         }
 
         public abstract void Draw(Graphics g, Pen color);
+        public abstract string Save();
+        public static Shape load(string shape)
+        {
+            string[] param = shape.Split(' ');
+            
+            if (param[0] == "ellipse")
+                return new Elipse(Convert.ToInt32(param[1]), Convert.ToInt32(param[2]), Convert.ToInt32(param[3]), Convert.ToInt32(param[4]));
+            if (param[0] == "rectangle")
+                return new Square(Convert.ToInt32(param[1]), Convert.ToInt32(param[2]), Convert.ToInt32(param[3]), Convert.ToInt32(param[4]));
+
+            throw new FormatException("Cant change this one into a shape :<");
+        }
+
     }
 
     /// <summary>
@@ -88,6 +101,17 @@ namespace WindowsFormsApplication1.Classes
             Rectangle rect = new Rectangle(_x, _y, _width, _height);
             g.DrawRectangle(color, rect);
         }
+
+        /// <summary>
+        /// Return this as thingy
+        /// </summary>
+        /// <returns>The thingy as string :D</returns>
+        public override string Save()
+        {
+            return String.Format(
+                "rectangle {0} {1} {2} {3}", this.getLeft(), this.getTop(), this.getWidth(), this.getHeight()
+            );
+        }
     }
 
     /// <summary>
@@ -102,6 +126,13 @@ namespace WindowsFormsApplication1.Classes
         {
             Rectangle rect = new Rectangle(_x, _y, _width, _height);
             g.DrawEllipse(color, rect);
+        }
+
+        public override string Save()
+        {
+            return String.Format(
+                "ellipse {0} {1} {2} {3}", this.getLeft(), this.getTop(), this.getWidth(), this.getHeight()
+            );
         }
     }
 }

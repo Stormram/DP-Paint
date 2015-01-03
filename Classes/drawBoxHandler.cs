@@ -76,8 +76,6 @@ namespace WindowsFormsApplication1.Classes
         /// <param name="selected_shape">the affected shape</param>
         public void viewClicked(int first_x, int first_y, int second_x, int second_y, Shape selected_shape)
         {
-
-            // TODO: write select things for it
             if (first_x != second_x || first_y != second_y)
                 applyMove(first_x, first_y, second_x, second_y, ref selected_shape);
 
@@ -171,7 +169,6 @@ namespace WindowsFormsApplication1.Classes
             if (box.getBottom() > selected.getBottom())
                 return moved_box.BOTTOM;
 
-            // Wont get here in current implementation
             return moved_box.MOVE;
         }
 
@@ -184,6 +181,29 @@ namespace WindowsFormsApplication1.Classes
         /// <param name="second_y">y pos of second click</param>
         /// <param name="tool">What tool is used</param>
         public void viewClicked(int first_x, int first_y, int second_x, int second_y, selected_tool tool)
+        {
+            if (tool != selected_tool.SELECT)
+                return;
+
+            // Calculate draw positions first
+            int size_x = Math.Abs(first_x - second_x);
+            int size_y = Math.Abs(first_y - second_y);
+
+            int x = Math.Min(first_x, second_x);
+            int y = Math.Min(first_y, second_y);
+
+            selectTool(x, y);
+        }
+
+        public void addShape(Shape shape)
+        {
+            _shapes.Add(shape);
+
+            Redraw();
+            countToolTip();
+        }
+
+        public Shape createShape(int first_x, int first_y, int second_x, int second_y, selected_tool tool)
         {
             // Calculate draw positions first
             int size_x = Math.Abs(first_x - second_x);
@@ -201,19 +221,21 @@ namespace WindowsFormsApplication1.Classes
                 case selected_tool.ELIPSE:
                     new_shape = new Elipse(x, y, size_x, size_y);
                     break;
-                case selected_tool.SELECT:
-                    selectTool(x, y);
-                    return;
                 default:
-                    return;
+                    return null;
             }
 
             // Dont allow stacked vars? Clicking creates shapes but doesn't work nice :<
             // Check this here since we have other tools aswell!
             if (first_x == second_x || first_y == second_y)
-                return;
+                return null;
 
-            _shapes.Add(new_shape);
+            return new_shape; 
+        }
+
+        public void remove(Shape shape)
+        {
+            _shapes.Remove(shape);
 
             Redraw();
             countToolTip();
@@ -242,6 +264,39 @@ namespace WindowsFormsApplication1.Classes
                 return;
 
             _form.UIThread(() => _count_label.Text = "Objects: " + _shapes.Count);
+        }
+
+        /// <summary>
+        /// Create a string to write to file using defined language
+        /// </summary>
+        /// <returns>The drawing as string</returns>
+        public string SaveAsString()
+        {
+            string result = "";
+            foreach (Shape _shape in _shapes)
+                result += _shape.Save() + Environment.NewLine;
+
+            return result;
+        }
+
+        /// <summary>
+        /// Loads a string drawing as the current painting
+        /// </summary>
+        /// <param name="to_load"></param>
+        public void LoadString(string to_load)
+        {
+            _shapes = new List<Shape>();
+            string[] lines = to_load.Split(Environment.NewLine.ToCharArray());
+
+            foreach (string l in lines)
+            {
+                // Skip empty lines :D
+                if (l == "") continue;
+
+                _shapes.Add(Shape.load(l));
+            }
+
+            Redraw();
         }
     }
 }
