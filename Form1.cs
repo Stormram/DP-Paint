@@ -26,10 +26,14 @@ namespace WindowsFormsApplication1
     {
         private int X;
         private int Y;
-        private Shape _selected = null;
         private selected_tool _cur_tool;
         private drawBoxHandler _draw_handler;
         private drawBoxHandler _draw_handler_hidden;
+        private CommandHandler _commandHandler;
+
+        // Move/resize stuff
+        private Shape _selected = null;
+        private ChangeCommand _change = null;
 
         public Form1()
         {
@@ -43,6 +47,7 @@ namespace WindowsFormsApplication1
 
             _draw_handler = new drawBoxHandler(this, this.draw_box, this.object_count_text);
             _draw_handler_hidden = new drawBoxHandler(this, this.draw_box_hidden, null, Color.Transparent, Pens.Aqua);
+            _commandHandler = new CommandHandler();
         }
 
         private void init_draw_box()
@@ -60,7 +65,14 @@ namespace WindowsFormsApplication1
         private void draw_box_MouseUp(object sender, MouseEventArgs e)
         {
             if (_selected == null)
-                _draw_handler.viewClicked(X, Y, e.X, e.Y, _cur_tool);
+                if (_cur_tool != selected_tool.SELECT)
+                {
+                    Shape _s = _draw_handler.createShape(X, Y, e.X, e.Y, _cur_tool);
+                    if (_s != null)
+                        _commandHandler.Add(new CreateCommand(_draw_handler, _s));
+                }
+                else
+                    _draw_handler.viewClicked(X, Y, e.X, e.Y, _cur_tool);
             else
                 _draw_handler_hidden.viewClicked(X, Y, e.X, e.Y, _selected);
         }
@@ -76,6 +88,7 @@ namespace WindowsFormsApplication1
         {
             applyToolStripMenuItem.Enabled = true;
             _selected = item;
+            _change = new ChangeCommand(_draw_handler, _selected);
 
             toolsToolStripMenuItem.Enabled = false;
 
@@ -90,19 +103,23 @@ namespace WindowsFormsApplication1
 
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            _commandHandler.Undo();
         }
 
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
+            _commandHandler.Redo();
         }
 
         private void applyToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            _change.finished(_selected.getLeft(), _selected.getTop(), _selected.getWidth(), _selected.getHeight());
+            _commandHandler.Add(_change);
+
+            _change = null;
             _selected = null;
             _draw_handler_hidden.Clear();
-            _draw_handler.Redraw();
+            //_draw_handler.Redraw();
             applyToolStripMenuItem.Enabled = true;
             toolsToolStripMenuItem.Enabled = true;
         }
@@ -146,6 +163,7 @@ namespace WindowsFormsApplication1
                 using (StreamReader bw = new StreamReader(File.Open(sfd.FileName, FileMode.Open)))
                 {
                     data = bw.ReadToEnd();
+                    bw.Close();
                 }
             }
             

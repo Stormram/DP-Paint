@@ -47,6 +47,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Classes\Command.cs" />
     <Compile Include="Classes\ControlExtensions.cs" />
     <Compile Include="Classes\Shape.cs" />
     <Compile Include="Classes\drawBoxHandler.cs" />
