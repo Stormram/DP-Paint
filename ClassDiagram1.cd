@@ -15,28 +15,28 @@
     </TypeIdentifier>
   </Class>
   <Class Name="WindowsFormsApplication1.Classes.ControlExtensions">
-    <Position X="0.75" Y="6" Width="1.5" />
+    <Position X="3.5" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Classes\ControlExtensions.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WindowsFormsApplication1.Program">
-    <Position X="6.25" Y="0.5" Width="1.5" />
+    <Position X="3.5" Y="1.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAA=</HashCode>
       <FileName>Program.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WindowsFormsApplication1.Form1" Collapsed="true">
-    <Position X="8.5" Y="0.5" Width="1.5" />
+    <Position X="3.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AJISkCKAEmAQgAgAQCGAgAAiUAABSIEAAEAIBNCAYCE=</HashCode>
       <FileName>Form1.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WindowsFormsApplication1.Classes.CreateCommand" BaseTypeListCollapsed="true">
-    <Position X="12.25" Y="2.25" Width="1.5" />
+    <Position X="11.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAggAAAAAAAAQAAAEABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Classes\Command.cs</FileName>
@@ -44,7 +44,7 @@
     <Lollipop Position="0.771" />
   </Class>
   <Class Name="WindowsFormsApplication1.Classes.ChangeCommand" BaseTypeListCollapsed="true">
-    <Position X="14" Y="2.25" Width="1.5" />
+    <Position X="13.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAACggAAABAAAAwAAAEABAAUAAAAAAAIAAAAAAAAAAA=</HashCode>
       <FileName>Classes\Command.cs</FileName>
@@ -52,43 +52,61 @@
     <Lollipop Position="0.1" />
   </Class>
   <Class Name="WindowsFormsApplication1.Classes.CommandHandler">
-    <Position X="10.5" Y="4" Width="1.5" />
+    <Position X="9.75" Y="2.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAIAAAAAAAAEBAAAAAAAAAABAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Classes\Command.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WindowsFormsApplication1.Classes.Shape">
-    <Position X="4" Y="0.5" Width="1.5" />
+    <Position X="5.25" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>YAAABIAIgISAAgADABAGAAAACJAAQAAEAAAAAAAAAAA=</HashCode>
+      <HashCode>YAAABIAIgASAAgADABAGAAAACJAAQAAEAAAAAAAAAAA=</HashCode>
       <FileName>Classes\Shape.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="WindowsFormsApplication1.Classes.Square">
-    <Position X="6.25" Y="2" Width="1.5" />
+    <Position X="6.25" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAIAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Classes\Shape.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="WindowsFormsApplication1.Classes.Elipse">
-    <Position X="6.25" Y="3.75" Width="1.5" />
+    <Position X="4.5" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAIAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Classes\Shape.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="WindowsFormsApplication1.Classes.Group" Collapsed="true">
+    <Position X="7.25" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>aAAAhIAAgAAAAkAHABAGAAAACIAAQAAEAAAAAAACAAA=</HashCode>
+      <FileName>Classes\Shape.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="_childGraphics" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.836" />
+  </Class>
   <Interface Name="WindowsFormsApplication1.Classes.Command">
-    <Position X="12.25" Y="4.75" Width="1.5" />
+    <Position X="11.5" Y="3" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAgAAAAAAAAAQAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Classes\Command.cs</FileName>
     </TypeIdentifier>
   </Interface>
+  <Interface Name="WindowsFormsApplication1.Classes.Graphic">
+    <Position X="7.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YAAABIAAgAAAAgADABAGAAAACIAAQAAEAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Shape.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Enum Name="WindowsFormsApplication1.selected_tool">
-    <Position X="8.5" Y="1.75" Width="1.5" />
+    <Position X="9.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAABCBAAAAAAAAAAAAAAAAAAABAAAAAAAAAIAA=</HashCode>
       <FileName>Form1.cs</FileName>
