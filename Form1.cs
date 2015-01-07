@@ -32,7 +32,7 @@ namespace WindowsFormsApplication1
         private CommandHandler _commandHandler;
 
         // Move/resize stuff
-        private Shape _selected = null;
+        private Graphic _selected = null;
         private ChangeCommand _change = null;
 
         public Form1()
@@ -84,7 +84,7 @@ namespace WindowsFormsApplication1
             this.selected_tool_text.Text = "Selected tool: " + _cur_tool.ToString().ToLower();
         }
 
-        public void item_selected(Shape item)
+        public void item_selected(Graphic item)
         {
             applyToolStripMenuItem.Enabled = true;
             _selected = item;

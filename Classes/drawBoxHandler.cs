@@ -23,7 +23,7 @@ namespace WindowsFormsApplication1.Classes
         private ToolStripStatusLabel _count_label;
         private Color _background_color;
         private Pen _draw_color;
-        private List<Shape> _shapes;
+        private List<Graphic> _shapes;
         private Form1 _form;
 
         public drawBoxHandler(Form1 form, PictureBox drawOn, ToolStripStatusLabel count_label) :
@@ -37,7 +37,7 @@ namespace WindowsFormsApplication1.Classes
             _count_label = count_label;
             _background_color = background_color;
             _draw_color = draw_color;
-            _shapes = new List<Shape>();
+            _shapes = new List<Graphic>();
 
             // Redraw for background settings!
             Redraw();
@@ -62,7 +62,7 @@ namespace WindowsFormsApplication1.Classes
         /// </summary>
         public void Clear()
         {
-            _shapes = new List<Shape>();
+            _shapes = new List<Graphic>();
             Redraw();
         }
 
@@ -74,12 +74,12 @@ namespace WindowsFormsApplication1.Classes
         /// <param name="second_x">x pos of second click</param>
         /// <param name="second_y">y pos of second click</param>
         /// <param name="selected_shape">the affected shape</param>
-        public void viewClicked(int first_x, int first_y, int second_x, int second_y, Shape selected_shape)
+        public void viewClicked(int first_x, int first_y, int second_x, int second_y, Graphic selected_shape)
         {
             if (first_x != second_x || first_y != second_y)
                 applyMove(first_x, first_y, second_x, second_y, ref selected_shape);
 
-            _shapes = new List<Shape>(5);
+            _shapes = new List<Graphic>(5);
             
             // Top center
             _shapes.Add(new Square(selected_shape.getXMiddle() - 5, selected_shape.getTop() - 5, 10, 10));
@@ -99,7 +99,7 @@ namespace WindowsFormsApplication1.Classes
         /// <param name="second_x">x pos of second click</param>
         /// <param name="second_y">y pos of second click</param>
         /// <param name="selected_shape">the affected shape</param>
-        public void applyMove(int first_x, int first_y, int second_x, int second_y, ref Shape selected_shape)
+        public void applyMove(int first_x, int first_y, int second_x, int second_y, ref Graphic selected_shape)
         {
             // Calculate draw positions first
             int size_x = Math.Abs(first_x - second_x);
@@ -121,7 +121,7 @@ namespace WindowsFormsApplication1.Classes
             if (i == _shapes.Count)
                 return;
 
-            moved_box move = getMovedBox(_shapes[i], selected_shape);
+            moved_box move = getMovedBox(_shapes[i] as Shape, selected_shape);
 
             int change_x = first_x - second_x;
             int change_y = first_y - second_y;
@@ -155,7 +155,7 @@ namespace WindowsFormsApplication1.Classes
         /// <param name="box">A box for dragging/resizing</param>
         /// <param name="selected">A shape which is selected</param>
         /// <returns></returns>
-        private moved_box getMovedBox(Shape box, Shape selected)
+        private moved_box getMovedBox(Shape box, Graphic selected)
         {
             if (box.getTop() < selected.getTop() && box.getBottom() > selected.getTop())
                 return moved_box.TOP;
@@ -195,7 +195,7 @@ namespace WindowsFormsApplication1.Classes
             selectTool(x, y);
         }
 
-        public void addShape(Shape shape)
+        public void addShape(Graphic shape)
         {
             _shapes.Add(shape);
 
@@ -233,7 +233,7 @@ namespace WindowsFormsApplication1.Classes
             return new_shape; 
         }
 
-        public void remove(Shape shape)
+        public void remove(Graphic shape)
         {
             _shapes.Remove(shape);
 
@@ -274,7 +274,7 @@ namespace WindowsFormsApplication1.Classes
         {
             string result = "";
             foreach (Shape _shape in _shapes)
-                result += _shape.Save() + Environment.NewLine;
+                result += _shape.Save(0);
 
             return result;
         }
@@ -285,17 +285,13 @@ namespace WindowsFormsApplication1.Classes
         /// <param name="to_load"></param>
         public void LoadString(string to_load)
         {
-            _shapes = new List<Shape>();
-            string[] lines = to_load.Split(Environment.NewLine.ToCharArray());
-
-            foreach (string l in lines)
-            {
-                // Skip empty lines :D
-                if (l == "") continue;
-
-                _shapes.Add(Shape.load(l));
-            }
-
+            int _val = 0;
+            Group _tempGroup = new Group();
+            _tempGroup.Load(to_load.Split(Environment.NewLine.ToCharArray()), ref _val);
+            
+            // The first group can be dropped since it's added by us :D
+            _shapes = _tempGroup.getGraphics();
+            
             Redraw();
         }
     }

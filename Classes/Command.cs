@@ -17,9 +17,9 @@ namespace WindowsFormsApplication1.Classes
     class CreateCommand : Command
     {
         drawBoxHandler _handler;
-        Shape _shape;
+        Graphic _shape;
 
-        public CreateCommand(drawBoxHandler handler, Shape shape)
+        public CreateCommand(drawBoxHandler handler, Graphic shape)
         {
             _handler = handler;
             _shape = shape;
@@ -46,9 +46,9 @@ namespace WindowsFormsApplication1.Classes
         drawBoxHandler _handler;
         int _new_x, _new_y, _new_width, _new_height;
         int _old_x, _old_y, _old_width, _old_height;
-        Shape _shape;
+        Graphic _shape;
 
-        public ChangeCommand(drawBoxHandler handler, Shape shape)
+        public ChangeCommand(drawBoxHandler handler, Graphic shape)
        {
             _handler = handler;
             _shape = shape;
