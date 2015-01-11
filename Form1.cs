@@ -32,8 +32,12 @@ namespace WindowsFormsApplication1
         private CommandHandler _commandHandler;
 
         // Move/resize stuff
-        private Shape _selected = null;
+        private Graphic _selected = null;
         private ChangeCommand _change = null;
+
+        // Group stuff
+        // Empty list :D
+        private List<Graphic> _toGroup = new List<Graphic>();
 
         public Form1()
         {
@@ -65,14 +69,14 @@ namespace WindowsFormsApplication1
         private void draw_box_MouseUp(object sender, MouseEventArgs e)
         {
             if (_selected == null)
-                if (_cur_tool != selected_tool.SELECT)
+                if (_cur_tool != selected_tool.SELECT && _cur_tool != selected_tool.GROUP)
                 {
                     Shape _s = _draw_handler.createShape(X, Y, e.X, e.Y, _cur_tool);
                     if (_s != null)
                         _commandHandler.Add(new CreateCommand(_draw_handler, _s));
                 }
                 else
-                    _draw_handler.viewClicked(X, Y, e.X, e.Y, _cur_tool);
+                    _draw_handler.viewClicked(X, Y, e.X, e.Y, _cur_tool); // select / group tool
             else
                 _draw_handler_hidden.viewClicked(X, Y, e.X, e.Y, _selected);
         }
@@ -84,20 +88,38 @@ namespace WindowsFormsApplication1
             this.selected_tool_text.Text = "Selected tool: " + _cur_tool.ToString().ToLower();
         }
 
-        public void item_selected(Shape item)
+        public void item_selected(Graphic item)
         {
-            applyToolStripMenuItem.Enabled = true;
-            _selected = item;
-            _change = new ChangeCommand(_draw_handler, _selected);
+            if (_cur_tool == selected_tool.SELECT)
+            {
+                _selected = item;
+                _change = new ChangeCommand(_draw_handler, _selected);
 
-            toolsToolStripMenuItem.Enabled = false;
+                toolsToolStripMenuItem.Enabled = false;
+                applyToolStripMenuItem.Enabled = true;
 
-            _draw_handler_hidden.viewClicked(0, 0, 0, 0, _selected);
+                _draw_handler_hidden.viewClicked(0, 0, 0, 0, _selected);
+            }
+            else
+            {
+                // Group tool!
+                // Add if not grouped already
+                if (!_toGroup.Contains(item))
+                    _toGroup.Add(item);
+                applyToolStripMenuItem.Enabled = true;
+            }
+
         }
 
         private void squareToolStripMenuItem_Click(object sender, EventArgs e) { set_tool(selected_tool.SQUARE); }
         private void elipseToolStripMenuItem_Click(object sender, EventArgs e) { set_tool(selected_tool.ELIPSE); }
-        private void groupToolStripMenuItem_Click(object sender, EventArgs e) { set_tool(selected_tool.GROUP); }
+        private void groupToolStripMenuItem_Click(object sender, EventArgs e) 
+        {
+            set_tool(selected_tool.GROUP);
+            applyToolStripMenuItem.Enabled = false;
+            toolsToolStripMenuItem.Enabled = false;
+            _toGroup = new List<Graphic>();
+        }
         private void captionToolStripMenuItem_Click(object sender, EventArgs e) { set_tool(selected_tool.CAPTION); }
         private void selectToolStripMenuItem_Click(object sender, EventArgs e) { set_tool(selected_tool.SELECT); }
 
@@ -113,13 +135,21 @@ namespace WindowsFormsApplication1
 
         private void applyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _change.finished(_selected.getLeft(), _selected.getTop(), _selected.getWidth(), _selected.getHeight());
-            _commandHandler.Add(_change);
+            if (_cur_tool == selected_tool.SELECT)
+            {
+                _change.finished(_selected.getLeft(), _selected.getTop(), _selected.getWidth(), _selected.getHeight());
+                _commandHandler.Add(_change);
 
-            _change = null;
-            _selected = null;
-            _draw_handler_hidden.Clear();
-            //_draw_handler.Redraw();
+                _change = null;
+                _selected = null;
+                _draw_handler_hidden.Clear();
+            }
+            else
+            {
+                // Group tool
+                _commandHandler.Add(new GroupCommand(_draw_handler, _toGroup));
+                _toGroup = new List<Graphic>();
+            }
             applyToolStripMenuItem.Enabled = true;
             toolsToolStripMenuItem.Enabled = true;
         }
