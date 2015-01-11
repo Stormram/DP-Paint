@@ -41,6 +41,43 @@ namespace WindowsFormsApplication1.Classes
         }
     }
 
+    class GroupCommand : Command
+    {
+        private drawBoxHandler _handler;
+        private List<Graphic> _toGroup;
+        private Group _groupGraphic;
+
+        public GroupCommand(drawBoxHandler handler, List<Graphic> toGroup)
+        {
+            _handler = handler;
+            _toGroup = toGroup;
+
+            _groupGraphic = new Group();
+            _groupGraphic.setList(toGroup);
+        }
+
+        public void Execute()
+        {
+            foreach (Graphic g in _toGroup)
+                _handler.remove(g);
+            _handler.addShape(_groupGraphic);
+            _handler.Redraw();
+        }
+
+        public void UnExecute()
+        {
+            foreach (Graphic g in _toGroup)
+                _handler.addShape(g);
+            _handler.remove(_groupGraphic);
+            _handler.Redraw();
+        }
+
+        public string toString()
+        {
+            return "Group";
+        }
+    }
+
     class ChangeCommand : Command
     {
         drawBoxHandler _handler;

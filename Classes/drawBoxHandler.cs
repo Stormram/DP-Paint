@@ -51,7 +51,7 @@ namespace WindowsFormsApplication1.Classes
             using (Graphics g = Graphics.FromImage(_draw_on.Image))
             {
                 g.Clear(_background_color);
-                foreach (Shape s in _shapes)
+                foreach (Graphic s in _shapes)
                     s.Draw(g, _draw_color);
             }
             _draw_on.Invalidate();
@@ -119,12 +119,17 @@ namespace WindowsFormsApplication1.Classes
 
             // We dragged nothing
             if (i == _shapes.Count)
+            {
+                Console.WriteLine("Nothing got clicked");
                 return;
+            }
 
-            moved_box move = getMovedBox(_shapes[i] as Shape, selected_shape);
+            moved_box move = getMovedBox(_shapes[i], selected_shape);
 
             int change_x = first_x - second_x;
             int change_y = first_y - second_y;
+
+            Console.WriteLine("{0} ({1},{2})", move, change_x, change_y);
 
             switch (move)
             {
@@ -147,6 +152,7 @@ namespace WindowsFormsApplication1.Classes
                     selected_shape.setY(selected_shape.getTop() - change_y);
                     break;
             }
+            Redraw();
         }   
 
         /// <summary>
@@ -155,7 +161,7 @@ namespace WindowsFormsApplication1.Classes
         /// <param name="box">A box for dragging/resizing</param>
         /// <param name="selected">A shape which is selected</param>
         /// <returns></returns>
-        private moved_box getMovedBox(Shape box, Graphic selected)
+        private moved_box getMovedBox(Graphic box, Graphic selected)
         {
             if (box.getTop() < selected.getTop() && box.getBottom() > selected.getTop())
                 return moved_box.TOP;
@@ -182,7 +188,7 @@ namespace WindowsFormsApplication1.Classes
         /// <param name="tool">What tool is used</param>
         public void viewClicked(int first_x, int first_y, int second_x, int second_y, selected_tool tool)
         {
-            if (tool != selected_tool.SELECT)
+            if (tool != selected_tool.SELECT && tool != selected_tool.GROUP)
                 return;
 
             // Calculate draw positions first
@@ -273,7 +279,7 @@ namespace WindowsFormsApplication1.Classes
         public string SaveAsString()
         {
             string result = "";
-            foreach (Shape _shape in _shapes)
+            foreach (Graphic _shape in _shapes)
                 result += _shape.Save(0);
 
             return result;

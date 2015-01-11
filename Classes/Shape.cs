@@ -54,6 +54,9 @@ namespace WindowsFormsApplication1.Classes
 
         public void remove(Graphic g)
         { _childGraphics.Remove(g); }
+        
+        public void setList(List<Graphic> graphicList)
+        { _childGraphics = graphicList; }
 
         public void Draw(Graphics g, Pen color)
         {
@@ -72,22 +75,24 @@ namespace WindowsFormsApplication1.Classes
 
         public void Load(string[] to_load, ref int position)
         {
-            // This holds the amount of items this group has!
-            int items = Convert.ToInt16(to_load[position].Trim().Split(' ')[1]);
-
             // Skip first line (has group)
-            for (int i = position+1; i < to_load.Length; i++ )
+            while ( position < to_load.Length )
             {   // map to string
-                string l = to_load[i];
+                string l = to_load[position++];
 
                 // Skip empty lines :D
-                if (l == "") continue;
+                if (l.Equals("")) continue;
+
+                Console.WriteLine("loading: {0}", l);
 
                 // decode string :D remove whitspace
-                string[] _values = l.Trim().Split(' ');
+                char[] sep = new char[] { ' '};
+                string[] _values = l.Trim().Split(sep, 5);
 
                 if (_values[0] == "group")
                 {
+                    Console.WriteLine("Adding group");
+
                     Group _child = new Group();
                     _childGraphics.Add(_child);
                     // Pas as reference, afterwards it will hold a higer position :D
@@ -95,6 +100,9 @@ namespace WindowsFormsApplication1.Classes
 
                 }
                 else if (_values[0] == "ellipse")
+                {
+                    Console.WriteLine("Adding ellipse");
+
                     // Add an ellipse
                     _childGraphics.Add(
                         new Elipse(
@@ -104,7 +112,10 @@ namespace WindowsFormsApplication1.Classes
                             Convert.ToInt16(_values[4])  // height 
                         )
                     );
-                else if (_values[0] == "square")
+                }
+                else if (_values[0] == "rectangle")
+                {
+                    Console.WriteLine("Adding square");
                     // Add and square
                     _childGraphics.Add(
                         new Square(
@@ -114,17 +125,16 @@ namespace WindowsFormsApplication1.Classes
                             Convert.ToInt16(_values[4])  // height 
                         )
                     );
+                }
                 else if (_values[0] == "ornament")
                 {
+                    Console.WriteLine("Adding ornament");
                     // TODO 
-                    continue;
                 }
                 else
                     Console.WriteLine("Dont know this string :< {0}", _values[0]);
 
                 // ornament part wont get here :D
-                items--;
-                if (items == 0) return;
             } // end for loop
         }
 
@@ -210,18 +220,27 @@ namespace WindowsFormsApplication1.Classes
         public void setHeight(int height)
         {
             // scaling all childeren
-            float _scaled = height / getHeight();
+            float _scaled = height / (float)getHeight();
+            int top = getTop();
+
             foreach (Graphic g in _childGraphics)
+            {
                 g.setHeight((int)(g.getHeight() * _scaled));
+                g.setY((int)(top + (g.getTop() - top) * _scaled));
+            }
         }
 
         public void setWidth(int width)
         {
             // scaling all childeren
-            float _scaled = width / getWidth();
-            foreach (Graphic g in _childGraphics)
-                g.setWidth((int)(g.getWidth() * _scaled));
+            float _scaled = width / (float)getWidth();
+            int left = getLeft();
 
+            foreach (Graphic g in _childGraphics)
+            {
+                g.setWidth((int)(g.getWidth() * _scaled));
+                g.setX((int)(left + (g.getLeft() - left) * _scaled));
+            }
         }
         #endregion
     }
