@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 
 namespace WindowsFormsApplication1.Classes
 {
-    public interface Graphic
+    public interface Graphic : IDrawElement
     {
-        void Draw(Graphics g, Pen color);
-        string Save(int depth);
         bool PointInShape(int x, int y);
 
         #region Get bounds
@@ -44,7 +42,7 @@ namespace WindowsFormsApplication1.Classes
         #endregion
     }
 
-    public class Group : Graphic
+    public class Group : Graphic, IDrawElement
     {
         private List<Graphic> _childGraphics = new List<Graphic>();
         public List<Graphic> getGraphics() { return _childGraphics; }
@@ -57,21 +55,6 @@ namespace WindowsFormsApplication1.Classes
         
         public void setList(List<Graphic> graphicList)
         { _childGraphics = graphicList; }
-
-        public void Draw(Graphics g, Pen color)
-        {
-            // Draw all childeren, a group doesn't need to be drawn :D
-            foreach (Graphic _g in _childGraphics)
-                _g.Draw(g, color);
-        }
-
-        public string Save(int depth)
-        {
-            string _out = String.Format("{0}group {1}" + Environment.NewLine, new String(' ', depth), _childGraphics.Count());
-            foreach (Graphic g in _childGraphics)
-                _out += g.Save(depth+1);
-            return _out;
-        }
 
         public void Load(string[] to_load, ref int position)
         {
@@ -243,6 +226,11 @@ namespace WindowsFormsApplication1.Classes
             }
         }
         #endregion
+
+        public void accept(IDrawElementVisitor visitor)
+        {
+            visitor.visit(this);
+        }
     }
 
     /// <summary>
@@ -310,57 +298,169 @@ namespace WindowsFormsApplication1.Classes
             return false;
         }
 
-        public abstract void Draw(Graphics g, Pen color);
-        public abstract string Save(int depth);
+        public void accept(IDrawElementVisitor visitor)
+        {
+            visitor.visit(this);
+        }
     }
 
     /// <summary>
     /// Implement drawing a square
     /// </summary>
-    class Square : Shape
+    public class Square : Shape, IDrawElement
     {
         public Square(int x, int y, int width, int height) :
             base(x, y, width, height) { }
 
-        public override void Draw(Graphics g, Pen color)
+        public new void accept(IDrawElementVisitor visitor)
         {
-            Rectangle rect = new Rectangle(_x, _y, _width, _height);
-            g.DrawRectangle(color, rect);
-        }
-
-        /// <summary>
-        /// Return this as thingy
-        /// </summary>
-        /// <returns>The thingy as string :D</returns>
-        public override string Save(int depth)
-        {
-            return String.Format(
-                "{4}rectangle {0} {1} {2} {3}" + Environment.NewLine, 
-                    this.getLeft(), this.getTop(), this.getWidth(), this.getHeight(), new String(' ', depth)
-            );
+            visitor.visit(this);
         }
     }
 
     /// <summary>
     /// Implment drawing a an elipse
     /// </summary>
-    class Elipse : Shape
+    public class Elipse : Shape, IDrawElement
     {
         public Elipse(int x, int y, int width, int height) :
             base(x, y, width, height) { }
 
-        public override void Draw(Graphics g, Pen color)
+        public new void accept(IDrawElementVisitor visitor)
         {
-            Rectangle rect = new Rectangle(_x, _y, _width, _height);
-            g.DrawEllipse(color, rect);
+            visitor.visit(this);
+        }
+    }
+
+    public class DrawVisitor : IDrawElementVisitor
+    {   
+        private Graphics _g;
+        private Pen _color;
+
+        public DrawVisitor(Graphics g, Pen color)
+        {
+            _g = g;
+            _color = color;
         }
 
-        public override string Save(int depth)
+        public void visit(Group group)
         {
-            return String.Format(
-                "{4}ellipse {0} {1} {2} {3}" + Environment.NewLine, 
-                    this.getLeft(), this.getTop(), this.getWidth(), this.getHeight(), new String(' ', depth)
+            foreach (Graphic g in group.getGraphics())
+                g.accept(this);
+        }
+
+        public void visit(Elipse elipse)
+        {
+            Rectangle rect = new Rectangle(
+                elipse.getLeft(), elipse.getTop(), elipse.getWidth(), elipse.getHeight()
             );
+            _g.DrawEllipse(_color, rect);
+        }
+
+        public void visit(Square square)
+        {
+            Rectangle rect = new Rectangle(
+             square.getLeft(), square.getTop(), square.getWidth(), square.getHeight()
+         );
+            _g.DrawRectangle(_color, rect); 
+        }
+
+
+        public void visit(Graphic g)
+        {
+            // Meh :<
+            throw new NotImplementedException();
+        }
+    }
+
+    public class ResizeVisitor : IDrawElementVisitor
+    {
+        int _x, _y, _width, _height;
+
+        public ResizeVisitor(int x, int y, int width, int height)
+        {
+            _x = x;
+            _y = y;
+            _width = width;
+            _height = height;
+        }
+
+        public void visit(Group group)
+        {
+            group.setHeight(_height);
+            group.setWidth(_width);
+            group.setX(_x);
+            group.setY(_y);
+        }
+
+        public void visit(Elipse elipse)
+        {
+            elipse.setHeight(_height);
+            elipse.setWidth(_width);
+            elipse.setX(_x);
+            elipse.setY(_y);
+        }
+
+        public void visit(Square square)
+        {
+            square.setHeight(_height);
+            square.setWidth(_width);
+            square.setX(_x);
+            square.setY(_y);
+        }
+
+        public void visit(Graphic g)
+        {
+            // meh
+            throw new NotImplementedException();
+        }
+    }
+
+    public class SaveVisitior : IDrawElementVisitor
+    {
+        int _depth;
+        string _out;
+
+        public SaveVisitior(int depth)
+        {
+            _depth = depth;
+            _out = "";
+        }
+
+        public string getString()
+        {
+            return _out;
+        }
+
+        public void visit(Group group)
+        {
+            _out += String.Format("{0}group {1}" + Environment.NewLine, new String(' ', _depth), group.getGraphics().Count());
+            _depth += 1;
+            foreach (Graphic g in group.getGraphics())
+                g.accept(this);
+            _depth -= 1;
+        }
+
+        public void visit(Elipse elipse)
+        {
+            _out += String.Format(
+                "{4}ellipse {0} {1} {2} {3}" + Environment.NewLine,
+                    elipse.getLeft(), elipse.getTop(), elipse.getWidth(), elipse.getHeight(), new String(' ', _depth)
+            );
+        }
+
+        public void visit(Square square)
+        {
+            _out += String.Format(
+               "{4}rectangle {0} {1} {2} {3}" + Environment.NewLine,
+                   square.getLeft(), square.getTop(), square.getWidth(), square.getHeight(), new String(' ', _depth)
+           );
+        }
+
+        public void visit(Graphic g)
+        {
+            // meh
+            throw new NotImplementedException();
         }
     }
 }
