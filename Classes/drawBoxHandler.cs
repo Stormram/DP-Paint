@@ -51,8 +51,11 @@ namespace WindowsFormsApplication1.Classes
             using (Graphics g = Graphics.FromImage(_draw_on.Image))
             {
                 g.Clear(_background_color);
+
+                DrawVisitor _v = new DrawVisitor(g, _draw_color);
+
                 foreach (Graphic s in _shapes)
-                    s.Draw(g, _draw_color);
+                    s.accept(_v);
             }
             _draw_on.Invalidate();
         }
@@ -278,11 +281,12 @@ namespace WindowsFormsApplication1.Classes
         /// <returns>The drawing as string</returns>
         public string SaveAsString()
         {
-            string result = "";
+            //string result = "";
+            SaveVisitior _v = new SaveVisitior(0);
             foreach (Graphic _shape in _shapes)
-                result += _shape.Save(0);
+                _shape.accept(_v);
 
-            return result;
+            return _v.getString();
         }
 
         /// <summary>

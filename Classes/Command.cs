@@ -107,10 +107,8 @@ namespace WindowsFormsApplication1.Classes
 
         public void Execute()
         {
-            _shape.setX(_new_x);
-            _shape.setY(_new_y);
-            _shape.setWidth(_new_width);
-            _shape.setHeight(_new_height);
+            ResizeVisitor _v = new ResizeVisitor(_new_x, _new_y, _new_width, _new_height);
+            _shape.accept(_v);
                 
             // Redraw the view 
             _handler.Redraw();
@@ -118,10 +116,8 @@ namespace WindowsFormsApplication1.Classes
 
         public void UnExecute()
         {
-            _shape.setX(_old_x);
-            _shape.setY(_old_y);
-            _shape.setWidth(_old_width);
-            _shape.setHeight(_old_height);
+            ResizeVisitor _v = new ResizeVisitor(_old_x, _old_y, _old_width, _old_height);
+            _shape.accept(_v);
 
             // Redraw the view 
             _handler.Redraw();
