@@ -234,6 +234,9 @@ namespace WindowsFormsApplication1.Classes
         }
     }
 
+    /// <summary>
+    /// Actual shape draw thing implements this
+    /// </summary>
     public interface IDrawInterface
     {
         void Draw(Graphics g, Pen p, BasicShape b);
@@ -298,8 +301,6 @@ namespace WindowsFormsApplication1.Classes
         /// <returns>True if x and y are within the bounds of the shape</returns>
         public bool PointInShape(int x, int y)
         {
-            //Console.WriteLine("{0} {1} -> {2}+{3}, {4}+{5}", x, y, _x, _width, _y, _height);
-
             if (_x < x && x < _x + _width &&
                 _y < y && y < _y + _height)
                 return true;
@@ -329,11 +330,6 @@ namespace WindowsFormsApplication1.Classes
     public class Square : IDrawInterface
     {
         public Square() { }
-
-        //public new void accept(IDrawElementVisitor visitor)
-        //{
-        //    visitor.visit(this);
-        //}
 
         private static Square _e = null;
         public static Square getShape()
@@ -386,11 +382,6 @@ namespace WindowsFormsApplication1.Classes
         {
             return "ellipse";
         }
-
-        //public new void accept(IDrawElementVisitor visitor)
-        //{
-        //    visitor.visit(this);
-        //}
     }
 
     public class DrawVisitor : IDrawElementVisitor
@@ -409,23 +400,6 @@ namespace WindowsFormsApplication1.Classes
             foreach (Graphic g in group.getGraphics())
                 g.accept(this);
         }
-
-        //public void visit(Elipse elipse)
-        //{
-        //    Rectangle rect = new Rectangle(
-        //        elipse.getLeft(), elipse.getTop(), elipse.getWidth(), elipse.getHeight()
-        //    );
-        //    _g.DrawEllipse(_color, rect);
-        //}
-
-        //public void visit(Square square)
-        //{
-        //    Rectangle rect = new Rectangle(
-        //     square.getLeft(), square.getTop(), square.getWidth(), square.getHeight()
-        // );
-        //    _g.DrawRectangle(_color, rect); 
-        //}
-
 
         public void visit(Graphic g)
         {
@@ -459,22 +433,6 @@ namespace WindowsFormsApplication1.Classes
             group.setX(_x);
             group.setY(_y);
         }
-
-        //public void visit(Elipse elipse)
-        //{
-        //    elipse.setHeight(_height);
-        //    elipse.setWidth(_width);
-        //    elipse.setX(_x);
-        //    elipse.setY(_y);
-        //}
-
-        //public void visit(Square square)
-        //{
-        //    square.setHeight(_height);
-        //    square.setWidth(_width);
-        //    square.setX(_x);
-        //    square.setY(_y);
-        //}
 
         public void visit(Graphic g)
         {
@@ -516,22 +474,6 @@ namespace WindowsFormsApplication1.Classes
                 g.accept(this);
             _depth -= 1;
         }
-
-        //public void visit(Elipse elipse)
-        //{
-        //    _out += String.Format(
-        //        "{4}ellipse {0} {1} {2} {3}" + Environment.NewLine,
-        //            elipse.getLeft(), elipse.getTop(), elipse.getWidth(), elipse.getHeight(), new String(' ', _depth)
-        //    );
-        //}
-
-        //public void visit(Square square)
-        //{
-        //    _out += String.Format(
-        //       "{4}rectangle {0} {1} {2} {3}" + Environment.NewLine,
-        //           square.getLeft(), square.getTop(), square.getWidth(), square.getHeight(), new String(' ', _depth)
-        //   );
-        //}
 
         public void visit(Graphic g)
         {
