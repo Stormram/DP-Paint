@@ -71,7 +71,7 @@ namespace WindowsFormsApplication1
             if (_selected == null)
                 if (_cur_tool != selected_tool.SELECT && _cur_tool != selected_tool.GROUP)
                 {
-                    Shape _s = _draw_handler.createShape(X, Y, e.X, e.Y, _cur_tool);
+                    BasicShape _s = _draw_handler.createShape(X, Y, e.X, e.Y, _cur_tool);
                     if (_s != null)
                         _commandHandler.Add(new CreateCommand(_draw_handler, _s));
                 }

@@ -7,17 +7,18 @@ using System.Threading.Tasks;
 namespace WindowsFormsApplication1.Classes
 {
     /// <summary>
-    /// Visitor pattern stuff
+    /// Visitor for elements interface
     /// </summary>
-
     public interface IDrawElementVisitor
     {
         void visit(Group group);
-        void visit(Elipse elipse);
-        void visit(Square square);
+        void visit(BasicShape elipse);
         void visit(Graphic g);
     }
 
+    /// <summary>
+    /// Elements must implement this so the IDrawElementVisitor can visit them
+    /// </summary>
     public interface IDrawElement
     {
         void accept(IDrawElementVisitor visitor);
