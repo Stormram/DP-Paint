@@ -85,11 +85,11 @@ namespace WindowsFormsApplication1.Classes
             _shapes = new List<Graphic>(5);
             
             // Top center
-            _shapes.Add(new Square(selected_shape.getXMiddle() - 5, selected_shape.getTop() - 5, 10, 10));
-            _shapes.Add(new Square(selected_shape.getRight() - 5, selected_shape.getYMiddle() - 5, 10, 10));
-            _shapes.Add(new Square(selected_shape.getXMiddle() - 5, selected_shape.getBottom() - 5, 10, 10));
-            _shapes.Add(new Square(selected_shape.getLeft() - 5, selected_shape.getYMiddle() - 5, 10, 10));
-            _shapes.Add(new Square(selected_shape.getLeft(), selected_shape.getTop(), selected_shape.getWidth(), selected_shape.getHeight()));
+            _shapes.Add(new BasicShape(selected_shape.getXMiddle() - 5, selected_shape.getTop() - 5, 10, 10, Square.getShape()));
+            _shapes.Add(new BasicShape(selected_shape.getRight() - 5, selected_shape.getYMiddle() - 5, 10, 10, Square.getShape()));
+            _shapes.Add(new BasicShape(selected_shape.getXMiddle() - 5, selected_shape.getBottom() - 5, 10, 10, Square.getShape()));
+            _shapes.Add(new BasicShape(selected_shape.getLeft() - 5, selected_shape.getYMiddle() - 5, 10, 10, Square.getShape()));
+            _shapes.Add(new BasicShape(selected_shape.getLeft(), selected_shape.getTop(), selected_shape.getWidth(), selected_shape.getHeight(), Square.getShape()));
 
             Redraw();
         }
@@ -212,7 +212,7 @@ namespace WindowsFormsApplication1.Classes
             countToolTip();
         }
 
-        public Shape createShape(int first_x, int first_y, int second_x, int second_y, selected_tool tool)
+        public BasicShape createShape(int first_x, int first_y, int second_x, int second_y, selected_tool tool)
         {
             // Calculate draw positions first
             int size_x = Math.Abs(first_x - second_x);
@@ -221,14 +221,14 @@ namespace WindowsFormsApplication1.Classes
             int x = Math.Min(first_x, second_x);
             int y = Math.Min(first_y, second_y);
 
-            Shape new_shape;
+            BasicShape new_shape;
             switch (tool)
             {
                 case selected_tool.SQUARE:
-                    new_shape = new Square(x, y, size_x, size_y);
+                    new_shape = new BasicShape(x, y, size_x, size_y, Square.getShape());
                     break;
                 case selected_tool.ELIPSE:
-                    new_shape = new Elipse(x, y, size_x, size_y);
+                    new_shape = new BasicShape(x, y, size_x, size_y, Elipse.getShape());
                     break;
                 default:
                     return null;
