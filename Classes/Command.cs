@@ -107,7 +107,7 @@ namespace WindowsFormsApplication1.Classes
 
         public void Execute()
         {
-            ResizeVisitor _v = new ResizeVisitor(_new_x, _new_y, _new_width, _new_height);
+            ResizeVisitor _v = new ResizeVisitor(_new_x, _new_y, _new_width, _new_height, _shape);
             _shape.accept(_v);
                 
             // Redraw the view 
@@ -116,7 +116,7 @@ namespace WindowsFormsApplication1.Classes
 
         public void UnExecute()
         {
-            ResizeVisitor _v = new ResizeVisitor(_old_x, _old_y, _old_width, _old_height);
+            ResizeVisitor _v = new ResizeVisitor(_old_x, _old_y, _old_width, _old_height, _shape);
             _shape.accept(_v);
 
             // Redraw the view 
