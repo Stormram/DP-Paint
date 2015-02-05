@@ -41,6 +41,36 @@ namespace WindowsFormsApplication1.Classes
         }
     }
 
+    class DecorateCommand : Command
+    {
+        drawBoxHandler _handler;
+        Graphic _decoration, _original;
+
+        public DecorateCommand(drawBoxHandler handler, Graphic decoration, Graphic original)
+        {
+            _handler = handler;
+            _decoration = decoration;
+            _original = original;
+        }
+
+        public void Execute()
+        {
+            _handler.addShape(_decoration);
+            _handler.remove(_original);
+        }
+
+        public void UnExecute()
+        {
+            _handler.addShape(_original);
+            _handler.remove(_decoration);
+        }
+
+        public String toString()
+        {
+            return "DecorateCommand";
+        }
+    }
+
     class GroupCommand : Command
     {
         private drawBoxHandler _handler;

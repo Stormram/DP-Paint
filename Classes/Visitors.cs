@@ -34,6 +34,17 @@ namespace WindowsFormsApplication1.Classes
         {
             // Dont do anything
         }
+
+
+        public void visit(Decorator decorator)
+        {
+            StringFormat sf = new StringFormat();
+            sf.LineAlignment = StringAlignment.Center;
+            sf.Alignment = StringAlignment.Center;
+
+            // Split for each location
+            _g.DrawString(decorator.getText(), new Font("Tahoma", 8), _color.Brush, decorator.getXMiddle(), decorator.getYMiddle(), sf);
+        }
     }
 
     public class ResizeVisitor : IDrawElementVisitor
@@ -80,6 +91,12 @@ namespace WindowsFormsApplication1.Classes
             // Calculate new width
             basic.setWidth((int)(basic.getWidth() * _xScaled));
         }
+
+
+        public void visit(Decorator decorator)
+        {
+            // Not needed :D
+        }
     }
 
     public class SaveVisitior : IDrawElementVisitor
@@ -118,6 +135,14 @@ namespace WindowsFormsApplication1.Classes
         public void end_visit(Group group)
         {
             _depth -= 1;
+        }
+
+        public void visit(Decorator decorator)
+        {
+            _out += String.Format(
+                  "{2}ornament {0} {1}" + Environment.NewLine,
+                  decorator.getLocationString(), decorator.getText(), new String(' ', _depth)
+              );
         }
     }
 }

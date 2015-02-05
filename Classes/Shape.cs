@@ -388,5 +388,105 @@ namespace WindowsFormsApplication1.Classes
         }
     }
 
-    
+    public enum location 
+    {
+        TOP, LEFT, RIGHT, BOTTOM
+    }
+    public class Decorator : Graphic
+    {
+        private Graphic _graphic;
+        private String _text;
+        private location _location;
+
+        public Decorator(Graphic graphic, String text, location loc)
+        {
+            _graphic = graphic;
+            _text = text;
+            _location = loc;
+        }
+
+        public String getText()
+        {
+            return _text;
+        }
+
+        public String getLocationString()
+        {
+            return _location.ToString().ToLower();
+        }
+
+        #region passThroughMethods
+
+        public bool PointInShape(int x, int y)
+        {
+            return _graphic.PointInShape(x, y);
+        }
+
+        public int getXMiddle()
+        {
+            return _graphic.getXMiddle();
+        }
+
+        public int getYMiddle()
+        {
+            return _graphic.getYMiddle();
+        }
+
+        public int getLeft()
+        {
+            return _graphic.getLeft();
+        }
+
+        public int getRight()
+        {
+            return _graphic.getRight();
+        }
+
+        public int getTop()
+        {
+            return _graphic.getTop();
+        }
+
+        public int getBottom()
+        {
+            return _graphic.getBottom();
+        }
+
+        public int getWidth()
+        {
+            return _graphic.getWidth();
+        }
+
+        public int getHeight()
+        {
+            return _graphic.getHeight();
+        }
+
+        public void setX(int x)
+        {
+            _graphic.setX(x);
+        }
+
+        public void setY(int y)
+        {
+            _graphic.setY(y);
+        }
+
+        public void setHeight(int height)
+        {
+            _graphic.setHeight(height);
+        }
+
+        public void setWidth(int width)
+        {
+            _graphic.setWidth(width);
+        }
+        #endregion
+
+        public void accept(IDrawElementVisitor visitor)
+        {
+            visitor.visit(this);
+            _graphic.accept(visitor);
+        }
+    }
 }
