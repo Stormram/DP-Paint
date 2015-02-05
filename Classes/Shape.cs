@@ -420,7 +420,6 @@ namespace WindowsFormsApplication1.Classes
     public class ResizeVisitor : IDrawElementVisitor
     {
         int _x, _y, _width, _height;
-        //int _Px, _Py, _Pwidth, _Pheight;
         float _yScaled, _xScaled;
         int _top, _left, _change_x, _change_y;
 
@@ -437,85 +436,32 @@ namespace WindowsFormsApplication1.Classes
             _xScaled = width / (float)shape.getWidth();
             _left = shape.getLeft();
             _change_y = y - shape.getTop();
-            _change_x = y - shape.getLeft();
-
-            //_Px = shape.getLeft();
-            //_Py = shape.getTop();
-            //_Pwidth = shape.getWidth();
-            //_Pheight = shape.getHeight();
+            _change_x = x - shape.getLeft();
         }
 
         public void visit(Group group)
         {
-            // Group can't be resized :D
-            // Childeren should be resized :-)
-
-            //group.setHeight(_height);
-            //group.setWidth(_width);
-            //group.setX(_x);
-            //group.setY(_y);
+            
         }
 
         public void end_visit(Group group)
         {
-            // Dont do anything
+
         }
      
         public void visit(BasicShape basic)
         {
-            //float _yScale = (float)_height / (float)_Pheight;
-            //float _xScale = (float)_width / (float)_Pwidth;
-
-            //Console.WriteLine("x:{0}, y:{1}", _xScale, _yScale);
-
-            //int new_x = (int)(_xScale * (_x - _Px) + _Px);
-            //int new_y = (int)(_yScale * (_y - _Py) + _Py);
-
-            //int new_height = (int)(basic.getHeight() * _yScale);
-            //int new_width = (int)(basic.getWidth() * _xScale);
-
             // Calculate translation
             basic.setY(basic.getTop() + _change_y);
             basic.setX(basic.getLeft() + _change_x);
 
             // Calculate new height
             basic.setHeight((int)(basic.getHeight() * _yScaled));
-            basic.setY((int)(_top + (basic.getTop() - _top) * _yScaled));
 
             // Calculate new width
             basic.setWidth((int)(basic.getWidth() * _xScaled));
-            basic.setX((int)(_left + (basic.getLeft() - _left) * _xScaled));
-
-            //basic.setHeight(new_height);
-            //basic.setWidth(new_width);
-            //basic.setX(new_x);
-            //basic.setY(new_y);
         }
     }
-
-    /*
-      public void setY(int y)
-        {
-            int _change = y - getTop();
-            foreach (Graphic g in _childGraphics)
-                g.setY(g.getTop() + _change);
-        }
-
-        public void setHeight(int height)
-        {
-            // scaling all childeren
-            float _scaled = height / (float)getHeight();
-            int top = getTop();
-
-            foreach (Graphic g in _childGraphics)
-            {
-                g.setHeight((int)(g.getHeight() * _scaled));
-                g.setY((int)(top + (g.getTop() - top) * _scaled));
-            }
-        }
-
-     
-     */
 
     public class SaveVisitior : IDrawElementVisitor
     {
