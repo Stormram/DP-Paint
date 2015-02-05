@@ -52,6 +52,7 @@
     <Compile Include="Classes\IDrawElement.cs" />
     <Compile Include="Classes\Shape.cs" />
     <Compile Include="Classes\drawBoxHandler.cs" />
+    <Compile Include="Classes\Visitors.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
