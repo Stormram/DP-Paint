@@ -50,16 +50,16 @@ namespace WindowsFormsApplication1.Classes
             if (_loc == location.BOTTOM || _loc == location.TOP)
                 _x = decorator.getXMiddle();
             else if (_loc == location.LEFT)
-                _x = decorator.getLeft();
+                _x = decorator.getLeft() - 10;
             else
-                _x = decorator.getRight();
+                _x = decorator.getRight() + 10;
 
             if (_loc == location.LEFT || _loc == location.RIGHT)
                 _y = decorator.getYMiddle();
             else if (_loc == location.BOTTOM)
-                _y = decorator.getBottom();
+                _y = decorator.getBottom() + 10;
             else
-                _y = decorator.getTop();
+                _y = decorator.getTop() - 10;
 
             // Split for each location
             _g.DrawString(decorator.getText(), new Font("Tahoma", 8), _color.Brush, _x, _y, sf);
