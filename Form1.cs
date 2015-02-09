@@ -69,14 +69,16 @@ namespace WindowsFormsApplication1
         private void draw_box_MouseUp(object sender, MouseEventArgs e)
         {
             if (_selected == null)
-                if (_cur_tool != selected_tool.SELECT && _cur_tool != selected_tool.GROUP)
+                if (_cur_tool != selected_tool.SELECT && _cur_tool != selected_tool.GROUP && _cur_tool != selected_tool.CAPTION)
                 {
                     BasicShape _s = _draw_handler.createShape(X, Y, e.X, e.Y, _cur_tool);
                     if (_s != null)
                         _commandHandler.Add(new CreateCommand(_draw_handler, _s));
                 }
                 else
-                    _draw_handler.viewClicked(X, Y, e.X, e.Y, _cur_tool); // select / group tool
+                {
+                    _draw_handler.viewClicked(X, Y, e.X, e.Y, _cur_tool); // select / group tool / caption
+                }
             else
                 _draw_handler_hidden.viewClicked(X, Y, e.X, e.Y, _selected);
         }
@@ -99,6 +101,11 @@ namespace WindowsFormsApplication1
                 applyToolStripMenuItem.Enabled = true;
 
                 _draw_handler_hidden.viewClicked(0, 0, 0, 0, _selected);
+            }
+            else if (_cur_tool == selected_tool.CAPTION)
+            {
+                _selected = item;
+                createCaption();
             }
             else
             {
@@ -199,6 +206,15 @@ namespace WindowsFormsApplication1
             
             // import it!
             _draw_handler.LoadString(data);
+        }
+
+        private void createCaption()
+        {
+            Tuple<location, string> data = Prompt.ShowDialog("Decorate", "What is the text to decorate with?");
+
+            _commandHandler.Add(new DecorateCommand(_draw_handler, new Decorator(_selected, data.Item2, data.Item1), _selected));
+
+            _selected = null;
         }
     }
 }

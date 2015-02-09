@@ -12,8 +12,10 @@ namespace WindowsFormsApplication1.Classes
     public interface IDrawElementVisitor
     {
         void visit(Group group);
+        void visit(Decorator decorator);
+        void end_visit(Group group);
         void visit(BasicShape elipse);
-        void visit(Graphic g);
+        //void visit(Graphic g);
     }
 
     /// <summary>

@@ -41,6 +41,36 @@ namespace WindowsFormsApplication1.Classes
         }
     }
 
+    class DecorateCommand : Command
+    {
+        drawBoxHandler _handler;
+        Graphic _decoration, _original;
+
+        public DecorateCommand(drawBoxHandler handler, Graphic decoration, Graphic original)
+        {
+            _handler = handler;
+            _decoration = decoration;
+            _original = original;
+        }
+
+        public void Execute()
+        {
+            _handler.addShape(_decoration);
+            _handler.remove(_original);
+        }
+
+        public void UnExecute()
+        {
+            _handler.addShape(_original);
+            _handler.remove(_decoration);
+        }
+
+        public String toString()
+        {
+            return "DecorateCommand";
+        }
+    }
+
     class GroupCommand : Command
     {
         private drawBoxHandler _handler;
@@ -107,7 +137,7 @@ namespace WindowsFormsApplication1.Classes
 
         public void Execute()
         {
-            ResizeVisitor _v = new ResizeVisitor(_new_x, _new_y, _new_width, _new_height);
+            ResizeVisitor _v = new ResizeVisitor(_new_x, _new_y, _new_width, _new_height, _shape);
             _shape.accept(_v);
                 
             // Redraw the view 
@@ -116,7 +146,7 @@ namespace WindowsFormsApplication1.Classes
 
         public void UnExecute()
         {
-            ResizeVisitor _v = new ResizeVisitor(_old_x, _old_y, _old_width, _old_height);
+            ResizeVisitor _v = new ResizeVisitor(_old_x, _old_y, _old_width, _old_height, _shape);
             _shape.accept(_v);
 
             // Redraw the view 

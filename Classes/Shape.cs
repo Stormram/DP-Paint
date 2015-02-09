@@ -42,7 +42,7 @@ namespace WindowsFormsApplication1.Classes
         #endregion
     }
 
-    public class Group : Graphic, IDrawElement
+    public class Group : Graphic // , IDrawElement
     {
         private List<Graphic> _childGraphics = new List<Graphic>();
         public List<Graphic> getGraphics() { return _childGraphics; }
@@ -58,6 +58,8 @@ namespace WindowsFormsApplication1.Classes
 
         public void Load(string[] to_load, ref int position)
         {
+            Decorator _dec = null; 
+
             // Skip first line (has group)
             while ( position < to_load.Length )
             {   // map to string
@@ -77,44 +79,81 @@ namespace WindowsFormsApplication1.Classes
                     Console.WriteLine("Adding group");
 
                     Group _child = new Group();
-                    _childGraphics.Add(_child);
-                    // Pas as reference, afterwards it will hold a higer position :D
-                    _child.Load(to_load, ref position);
 
+                    if(_dec == null )
+                        _childGraphics.Add(_child);
+                    else
+                    {
+                        // Pas as reference, afterwards it will hold a higer position :D
+                        _child.Load(to_load, ref position);
+                        _dec.setGraphic(_child);
+                        _dec = null;
+                    }
                 }
                 else if (_values[0] == "ellipse")
                 {
                     Console.WriteLine("Adding ellipse");
 
-                    // Add an ellipse
-                    _childGraphics.Add(
-                        new BasicShape(
+                    BasicShape _s =  new BasicShape(
                             Convert.ToInt16(_values[1]), // x
                             Convert.ToInt16(_values[2]), // y
                             Convert.ToInt16(_values[3]), // width
                             Convert.ToInt16(_values[4]),  // height 
                             Elipse.getShape()
-                        )
-                    );
+                        );
+
+                    if (_dec == null)
+                        _childGraphics.Add(_s);
+                    else
+                    {
+                        _dec.setGraphic(_s);
+                        _dec = null;
+                    }
                 }
                 else if (_values[0] == "rectangle")
                 {
                     Console.WriteLine("Adding square");
-                    // Add and square
-                    _childGraphics.Add(
-                        new BasicShape(
+
+                    BasicShape _s = new BasicShape(
                             Convert.ToInt16(_values[1]), // x
                             Convert.ToInt16(_values[2]), // y
                             Convert.ToInt16(_values[3]), // width
                             Convert.ToInt16(_values[4]),  // height 
                             Square.getShape()
-                        )
-                    );
+                        );
+
+                    if (_dec == null)
+                        // Add and square
+                        _childGraphics.Add(_s);
+                    else
+                    {
+                        _dec.setGraphic(_s);
+                        _dec = null;
+                    }
                 }
                 else if (_values[0] == "ornament")
                 {
                     Console.WriteLine("Adding ornament");
-                    // TODO 
+
+                    location _loc = location.TOP;
+                    if (_values[1] == "bottom")
+                        _loc = location.BOTTOM;
+                    else if (_values[1] == "left")
+                        _loc = location.LEFT;
+                    else if (_values[1] == "right")
+                        _loc = location.RIGHT;
+
+                    if (_dec != null)
+                    {
+                        Decorator _new_dec = new Decorator(_values[2], _loc);
+                        _dec.setGraphic(_new_dec);
+                        _dec = _new_dec;
+                    } 
+                    else
+                    {
+                        _dec = new Decorator(_values[2], _loc);
+                        _childGraphics.Add(_dec);
+                    }
                 }
                 else
                     Console.WriteLine("Dont know this string :< {0}", _values[0]);
@@ -231,6 +270,10 @@ namespace WindowsFormsApplication1.Classes
         public void accept(IDrawElementVisitor visitor)
         {
             visitor.visit(this);
+            foreach (Graphic g in _childGraphics)
+                g.accept(visitor);
+                //visitor.visit(g);
+            visitor.end_visit(this);
         }
     }
 
@@ -246,7 +289,7 @@ namespace WindowsFormsApplication1.Classes
     /// <summary>
     /// Base class for shapes drawn on the screen
     /// </summary>
-    public class BasicShape : Graphic, IDrawElement
+    public class BasicShape : Graphic//, IDrawElement
     {
         protected int _x, _y, _width, _height;
         private IDrawInterface _interface;
@@ -384,110 +427,118 @@ namespace WindowsFormsApplication1.Classes
         }
     }
 
-    public class DrawVisitor : IDrawElementVisitor
-    {   
-        private Graphics _g;
-        private Pen _color;
-
-        public DrawVisitor(Graphics g, Pen color)
-        {
-            _g = g;
-            _color = color;
-        }
-
-        public void visit(Group group)
-        {
-            foreach (Graphic g in group.getGraphics())
-                g.accept(this);
-        }
-
-        public void visit(Graphic g)
-        {
-            // Meh :<
-            throw new NotImplementedException();
-        }
-
-
-        public void visit(BasicShape basic)
-        {
-            basic.Draw(_g, _color);
-        }
-    }
-
-    public class ResizeVisitor : IDrawElementVisitor
+    public enum location 
     {
-        int _x, _y, _width, _height;
-
-        public ResizeVisitor(int x, int y, int width, int height)
-        {
-            _x = x;
-            _y = y;
-            _width = width;
-            _height = height;
-        }
-
-        public void visit(Group group)
-        {
-            group.setHeight(_height);
-            group.setWidth(_width);
-            group.setX(_x);
-            group.setY(_y);
-        }
-
-        public void visit(Graphic g)
-        {
-            // meh
-            throw new NotImplementedException();
-        }
-
-
-        public void visit(BasicShape basic)
-        {
-            basic.setHeight(_height);
-            basic.setWidth(_width);
-            basic.setX(_x);
-            basic.setY(_y);
-        }
+        TOP, LEFT, RIGHT, BOTTOM
     }
-
-    public class SaveVisitior : IDrawElementVisitor
+    public class Decorator : Graphic
     {
-        int _depth;
-        string _out;
+        private Graphic _graphic;
+        private String _text;
+        private location _location;
 
-        public SaveVisitior(int depth)
+        public Decorator(String text, location loc) : this(null, text, loc)
+        { }
+
+        public Decorator(Graphic graphic, String text, location loc)
         {
-            _depth = depth;
-            _out = "";
+            _graphic = graphic;
+            _text = text;
+            _location = loc;
         }
 
-        public string getString()
+        public void setGraphic(Graphic g)
         {
-            return _out;
+            this._graphic = g;
         }
 
-        public void visit(Group group)
+        public String getText()
         {
-            _out += String.Format("{0}group {1}" + Environment.NewLine, new String(' ', _depth), group.getGraphics().Count());
-            _depth += 1;
-            foreach (Graphic g in group.getGraphics())
-                g.accept(this);
-            _depth -= 1;
+            return _text;
         }
 
-        public void visit(Graphic g)
+        public String getLocationString()
         {
-            // meh
-            throw new NotImplementedException();
+            return _location.ToString().ToLower();
         }
 
-
-        public void visit(BasicShape basic)
+        public location getLocation()
         {
-            _out += String.Format(
-                "{4}{5} {0} {1} {2} {3}" + Environment.NewLine,
-                basic.getLeft(), basic.getTop(), basic.getWidth(), basic.getHeight(), new String(' ', _depth), basic.toString()
-            );
+            return _location;
+        }
+
+        #region passThroughMethods
+
+        public bool PointInShape(int x, int y)
+        {
+            return _graphic.PointInShape(x, y);
+        }
+
+        public int getXMiddle()
+        {
+            return _graphic.getXMiddle();
+        }
+
+        public int getYMiddle()
+        {
+            return _graphic.getYMiddle();
+        }
+
+        public int getLeft()
+        {
+            return _graphic.getLeft();
+        }
+
+        public int getRight()
+        {
+            return _graphic.getRight();
+        }
+
+        public int getTop()
+        {
+            return _graphic.getTop();
+        }
+
+        public int getBottom()
+        {
+            return _graphic.getBottom();
+        }
+
+        public int getWidth()
+        {
+            return _graphic.getWidth();
+        }
+
+        public int getHeight()
+        {
+            return _graphic.getHeight();
+        }
+
+        public void setX(int x)
+        {
+            _graphic.setX(x);
+        }
+
+        public void setY(int y)
+        {
+            _graphic.setY(y);
+        }
+
+        public void setHeight(int height)
+        {
+            _graphic.setHeight(height);
+        }
+
+        public void setWidth(int width)
+        {
+            _graphic.setWidth(width);
+        }
+        #endregion
+
+        public void accept(IDrawElementVisitor visitor)
+        {
+            visitor.visit(this);
+            _graphic.accept(visitor);
         }
     }
 }
