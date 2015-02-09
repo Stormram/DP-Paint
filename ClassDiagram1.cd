@@ -31,7 +31,7 @@
   <Class Name="WindowsFormsApplication1.Form1" Collapsed="true">
     <Position X="3.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AJISkCKAEmAQgAgAwCGAgAAiUAABSIEAAEAIBNCAYCE=</HashCode>
+      <HashCode>AJISkCKAEmAQgAgAwCGAgAAiUAABSIEAAEAoBNCAYCE=</HashCode>
       <FileName>Form1.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -76,10 +76,10 @@
       <Field Name="_redoStack" />
     </ShowAsCollectionAssociation>
   </Class>
-  <Class Name="WindowsFormsApplication1.Classes.Shape">
+  <Class Name="WindowsFormsApplication1.Classes.BasicShape">
     <Position X="5.25" Y="1.75" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>YAAABACIgASAAAADABAGAAAACJAAQAAEAAAAAAAAAAA=</HashCode>
+      <HashCode>YAAABACIgASAAgADABAGBAAACJAAQAAEAAAAAAAAAAA=</HashCode>
       <FileName>Classes\Shape.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -87,7 +87,7 @@
   <Class Name="WindowsFormsApplication1.Classes.Square">
     <Position X="5.25" Y="7.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAABAAgAAAAAABAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
       <FileName>Classes\Shape.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -95,7 +95,7 @@
   <Class Name="WindowsFormsApplication1.Classes.Elipse">
     <Position X="3.5" Y="7.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAABAAgAAAAAABAAAAAAAAAAAAAAAAAQAAAA=</HashCode>
       <FileName>Classes\Shape.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -119,23 +119,31 @@
   <Class Name="WindowsFormsApplication1.Classes.DrawVisitor" BaseTypeListCollapsed="true">
     <Position X="11" Y="8.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAIAAAAAAAEABAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Classes\Shape.cs</FileName>
+      <HashCode>AAAAAAAAAAAIAAAAAAAEABAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Visitors.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="WindowsFormsApplication1.Classes.ResizeVisitor" BaseTypeListCollapsed="true">
     <Position X="9.25" Y="8.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAIAASAAAAAAAAEAAAAABAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Classes\Shape.cs</FileName>
+      <HashCode>ABAAAAAIAASCAAAAAAAEAAAAARAAAAgAAAAAAICAAAA=</HashCode>
+      <FileName>Classes\Visitors.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="WindowsFormsApplication1.Classes.SaveVisitior" BaseTypeListCollapsed="true">
     <Position X="12.75" Y="8.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQAIAAAAAAAAAAAAAAAEAAAAAAQAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AQAIAAAAAAAAAAAAAAAEAAAAAQQAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Visitors.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="WindowsFormsApplication1.Classes.Decorator" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="1.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>YAIABACAgAAAAAADABAGGAAACIAAQAAOACAAAAAAAAA=</HashCode>
       <FileName>Classes\Shape.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -157,7 +165,7 @@
   <Interface Name="WindowsFormsApplication1.Classes.IDrawElementVisitor">
     <Position X="14.5" Y="8.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAEAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Classes\IDrawElement.cs</FileName>
     </TypeIdentifier>
   </Interface>
@@ -168,11 +176,25 @@
       <FileName>Classes\IDrawElement.cs</FileName>
     </TypeIdentifier>
   </Interface>
+  <Interface Name="WindowsFormsApplication1.Classes.IDrawInterface">
+    <Position X="14.5" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Shape.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
   <Enum Name="WindowsFormsApplication1.selected_tool">
     <Position X="9.5" Y="1.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAABCBAAAAAAAAAAAAAAAAAAABAAAAAAAAAIAA=</HashCode>
       <FileName>Form1.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="WindowsFormsApplication1.Classes.location">
+    <Position X="1.75" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAgAAABAAAAAAAAAAAAAgAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Shape.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />

@@ -191,13 +191,6 @@ namespace WindowsFormsApplication1.Classes
         /// <param name="tool">What tool is used</param>
         public void viewClicked(int first_x, int first_y, int second_x, int second_y, selected_tool tool)
         {
-            if (tool != selected_tool.SELECT && tool != selected_tool.GROUP && tool != selected_tool.CAPTION)
-                return;
-
-            // Calculate draw positions first
-            int size_x = Math.Abs(first_x - second_x);
-            int size_y = Math.Abs(first_y - second_y);
-
             int x = Math.Min(first_x, second_x);
             int y = Math.Min(first_y, second_y);
 

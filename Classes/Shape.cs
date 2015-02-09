@@ -58,6 +58,8 @@ namespace WindowsFormsApplication1.Classes
 
         public void Load(string[] to_load, ref int position)
         {
+            Decorator _dec = null; 
+
             // Skip first line (has group)
             while ( position < to_load.Length )
             {   // map to string
@@ -77,44 +79,81 @@ namespace WindowsFormsApplication1.Classes
                     Console.WriteLine("Adding group");
 
                     Group _child = new Group();
-                    _childGraphics.Add(_child);
-                    // Pas as reference, afterwards it will hold a higer position :D
-                    _child.Load(to_load, ref position);
 
+                    if(_dec == null )
+                        _childGraphics.Add(_child);
+                    else
+                    {
+                        // Pas as reference, afterwards it will hold a higer position :D
+                        _child.Load(to_load, ref position);
+                        _dec.setGraphic(_child);
+                        _dec = null;
+                    }
                 }
                 else if (_values[0] == "ellipse")
                 {
                     Console.WriteLine("Adding ellipse");
 
-                    // Add an ellipse
-                    _childGraphics.Add(
-                        new BasicShape(
+                    BasicShape _s =  new BasicShape(
                             Convert.ToInt16(_values[1]), // x
                             Convert.ToInt16(_values[2]), // y
                             Convert.ToInt16(_values[3]), // width
                             Convert.ToInt16(_values[4]),  // height 
                             Elipse.getShape()
-                        )
-                    );
+                        );
+
+                    if (_dec == null)
+                        _childGraphics.Add(_s);
+                    else
+                    {
+                        _dec.setGraphic(_s);
+                        _dec = null;
+                    }
                 }
                 else if (_values[0] == "rectangle")
                 {
                     Console.WriteLine("Adding square");
-                    // Add and square
-                    _childGraphics.Add(
-                        new BasicShape(
+
+                    BasicShape _s = new BasicShape(
                             Convert.ToInt16(_values[1]), // x
                             Convert.ToInt16(_values[2]), // y
                             Convert.ToInt16(_values[3]), // width
                             Convert.ToInt16(_values[4]),  // height 
                             Square.getShape()
-                        )
-                    );
+                        );
+
+                    if (_dec == null)
+                        // Add and square
+                        _childGraphics.Add(_s);
+                    else
+                    {
+                        _dec.setGraphic(_s);
+                        _dec = null;
+                    }
                 }
                 else if (_values[0] == "ornament")
                 {
                     Console.WriteLine("Adding ornament");
-                    // TODO 
+
+                    location _loc = location.TOP;
+                    if (_values[1] == "bottom")
+                        _loc = location.BOTTOM;
+                    else if (_values[1] == "left")
+                        _loc = location.LEFT;
+                    else if (_values[1] == "right")
+                        _loc = location.RIGHT;
+
+                    if (_dec != null)
+                    {
+                        Decorator _new_dec = new Decorator(_values[2], _loc);
+                        _dec.setGraphic(_new_dec);
+                        _dec = _new_dec;
+                    } 
+                    else
+                    {
+                        _dec = new Decorator(_values[2], _loc);
+                        _childGraphics.Add(_dec);
+                    }
                 }
                 else
                     Console.WriteLine("Dont know this string :< {0}", _values[0]);
@@ -398,11 +437,19 @@ namespace WindowsFormsApplication1.Classes
         private String _text;
         private location _location;
 
+        public Decorator(String text, location loc) : this(null, text, loc)
+        { }
+
         public Decorator(Graphic graphic, String text, location loc)
         {
             _graphic = graphic;
             _text = text;
             _location = loc;
+        }
+
+        public void setGraphic(Graphic g)
+        {
+            this._graphic = g;
         }
 
         public String getText()
@@ -413,6 +460,11 @@ namespace WindowsFormsApplication1.Classes
         public String getLocationString()
         {
             return _location.ToString().ToLower();
+        }
+
+        public location getLocation()
+        {
+            return _location;
         }
 
         #region passThroughMethods

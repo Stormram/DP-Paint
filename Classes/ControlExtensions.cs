@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 
 namespace WindowsFormsApplication1.Classes
@@ -25,7 +26,7 @@ namespace WindowsFormsApplication1.Classes
 
     public static class Prompt
     {
-        public static string ShowDialog(string text, string caption)
+        public static Tuple<location, string> ShowDialog(string text, string caption)
         {
             Form prompt = new Form();
             prompt.Width = 500;
@@ -33,16 +34,26 @@ namespace WindowsFormsApplication1.Classes
             prompt.FormBorderStyle = FormBorderStyle.FixedDialog;
             prompt.Text = caption;
             prompt.StartPosition = FormStartPosition.CenterScreen;
-            Label textLabel = new Label() { Left = 50, Top=20, Text=text };
-            TextBox textBox = new TextBox() { Left = 50, Top=50, Width=400 };
+            TextBox textBox = new TextBox() { Left = 50, Top=30, Width=200 };
             Button confirmation = new Button() { Text = "Ok", Left=350, Width=100, Top=70 };
+
+            Dictionary<location, string> _dict = new Dictionary<location, string>();
+            _dict.Add(location.BOTTOM, "Onderkant");
+            _dict.Add(location.TOP, "Bovenkant");
+            _dict.Add(location.LEFT, "Links");
+            _dict.Add(location.RIGHT, "Rechts");
+            ComboBox comboBox = new ComboBox() { DataSource= new BindingSource(_dict, null), DisplayMember = "Value", ValueMember = "Key", Left = 300, Top = 30 };
+
             confirmation.Click += (sender, e) => { prompt.Close(); };
             prompt.Controls.Add(textBox);
             prompt.Controls.Add(confirmation);
-            prompt.Controls.Add(textLabel);
+            prompt.Controls.Add(comboBox);
             prompt.AcceptButton = confirmation;
             prompt.ShowDialog();
-            return textBox.Text;
+
+            location _loc = ((KeyValuePair<location, string>)(comboBox.SelectedItem)).Key;
+
+            return new Tuple<location, string>(_loc, textBox.Text);
         }
     }
 }

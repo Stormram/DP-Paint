@@ -42,8 +42,27 @@ namespace WindowsFormsApplication1.Classes
             sf.LineAlignment = StringAlignment.Center;
             sf.Alignment = StringAlignment.Center;
 
+            int _x = 0,
+                _y = 0; 
+
+            location _loc = decorator.getLocation();
+            
+            if (_loc == location.BOTTOM || _loc == location.TOP)
+                _x = decorator.getXMiddle();
+            else if (_loc == location.LEFT)
+                _x = decorator.getLeft();
+            else
+                _x = decorator.getRight();
+
+            if (_loc == location.LEFT || _loc == location.RIGHT)
+                _y = decorator.getYMiddle();
+            else if (_loc == location.BOTTOM)
+                _y = decorator.getBottom();
+            else
+                _y = decorator.getTop();
+
             // Split for each location
-            _g.DrawString(decorator.getText(), new Font("Tahoma", 8), _color.Brush, decorator.getXMiddle(), decorator.getYMiddle(), sf);
+            _g.DrawString(decorator.getText(), new Font("Tahoma", 8), _color.Brush, _x, _y, sf);
         }
     }
 

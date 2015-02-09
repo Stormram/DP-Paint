@@ -78,9 +78,6 @@ namespace WindowsFormsApplication1
                 else
                 {
                     _draw_handler.viewClicked(X, Y, e.X, e.Y, _cur_tool); // select / group tool / caption
-
-                    if (_cur_tool == selected_tool.CAPTION)
-                        createCaption();
                 }
             else
                 _draw_handler_hidden.viewClicked(X, Y, e.X, e.Y, _selected);
@@ -104,6 +101,11 @@ namespace WindowsFormsApplication1
                 applyToolStripMenuItem.Enabled = true;
 
                 _draw_handler_hidden.viewClicked(0, 0, 0, 0, _selected);
+            }
+            else if (_cur_tool == selected_tool.CAPTION)
+            {
+                _selected = item;
+                createCaption();
             }
             else
             {
@@ -208,9 +210,9 @@ namespace WindowsFormsApplication1
 
         private void createCaption()
         {
-            string text = Prompt.ShowDialog("Decorate", "What is the text to decorate with?");
+            Tuple<location, string> data = Prompt.ShowDialog("Decorate", "What is the text to decorate with?");
 
-            _commandHandler.Add(new DecorateCommand(_draw_handler, new Decorator(_selected, text, location.BOTTOM), _selected));
+            _commandHandler.Add(new DecorateCommand(_draw_handler, new Decorator(_selected, data.Item2, data.Item1), _selected));
 
             _selected = null;
         }
